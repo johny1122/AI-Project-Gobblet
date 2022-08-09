@@ -1,10 +1,10 @@
-from typing import Union
+from typing import Union, List
 from piece import Piece
 
 
 class PiecesStack:
 
-    def __init__(self, pieces=None):
+    def __init__(self, pieces=Union[None, List[Piece]]):
         if pieces is None:
             self.pieces = []
         else:

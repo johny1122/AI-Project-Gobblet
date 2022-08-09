@@ -3,7 +3,7 @@ from globals import *
 
 class Location:
 
-    def __init__(self, row: str, col: str):
+    def __init__(self, row: int, col: int):
         self.row = row
         self.col = col
 
