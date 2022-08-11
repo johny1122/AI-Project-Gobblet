@@ -1,63 +1,101 @@
-import pygame
+import tkinter as tk
+from tkinter import font, PhotoImage
+from PIL import ImageTk, Image
+from globals import *
 
-settings = {'window_size': (400, 600),
-            'FPS': 30,
-            'font': 'century',
-            'font_size': 50,
-            'caption_name': 'Gobblet Gobblers',
-
-            'YELLOW': (255, 212, 0),
-            'WHITE': (255, 255, 255),
-            'BLACK': (0, 0, 0),
-            'BOLD': 5,
-
-            'reset_sleep_time': 5}
-
+cells = [0] * 9
+stacks1 = [0] * 3
+stacks2 = [0] * 3
 
 def main():
-    pygame.init()
-    screen = pygame.display.set_mode(settings['window_size'])
-    font = pygame.font.SysFont(settings['font'], settings['font_size'])
-    FPSCLOCK = pygame.time.Clock()
-    FPS = settings['FPS']
-    pygame.display.set_caption(settings['caption_name'])
+    helloScreen = tk.Tk()
+    helv16 = font.Font(root = helloScreen, family="Helvetica", size=16,
+                  weight="bold")
+    helloScreen.geometry("800x400")
+    imgFrame = tk.Frame(helloScreen, width=800, height=500)
+    imgFrame.place(anchor="center")
+    imgFrame.pack()
+    startingImg = ImageTk.PhotoImage(Image.open("gobbletgobblers.jpg"))
 
-    # p1 = Human_player(FPSCLOCK, FPS, renderer)
-    # p2 = Human_player(FPSCLOCK, FPS, renderer)
+    imgLabel = tk.Label(imgFrame, image=startingImg)
+    imgLabel.pack()
+    #TODO: change command to a function allowing to select modes (human vs
+    # AI, AI vs AI)
+    startButton = tk.Button(helloScreen, text = "Start",
+                            command=lambda: setGameModes(helloScreen),
+                            width=7, height=3,
+                            font=helv16,
+                            activeforeground="red", bg="light green")
+    startButton.place(x=650, y=300)
 
-    # p1 = Random_player()
-    # p2 = Random_player()
+    helloScreen.mainloop()
 
-    # p1 = Monte_Carlo_player()
-    # p2 = Monte_Carlo_player()
 
-    # 스코어 보드
-    p1_score = 0
-    p2_score = 0
-    draw_score = 0
 
-    i = 0
-    while True:
-        reward, done = env.move(p1, p2, (-1) ** i)  # 1,-1,1,-1...
-        renderer.rendering(env)
-        i += 1
-        if done:
-            if reward == 1:
-                print("winner is p1({})".format(p1.name))
-                p1_score += 1
-            elif reward == -1:
-                print("winner is p2({})".format(p2.name))
-                p2_score += 1
-            else:
-                print("draw")
-                draw_score += 1
 
-            print(
-                "p1({}) = {} p2({}) = {} draw = {}".format(p1.name, p1_score, p2.name, p2_score, draw_score))
+def setGameModes(prevWindow):
 
-            env.reset_game()
-            renderer.new_game_window(env)
-            i = 0
+    prevWindow.destroy()
+    selectionScreen = tk.Tk()
+    selectionScreen.geometry("500x300")
+    helv32 = font.Font(root = selectionScreen, family="Helvetica", size=32,
+                  weight="bold")
+    helv16 = font.Font(root = selectionScreen, family="Helvetica", size=16,
+                  weight="bold")
+    selectQuestion = tk.Label(text="Choose a Game Mode:", fg="black",
+                              font=helv32)
+    selectQuestion.pack(anchor="center")
+
+    #TODO: set functions that set up players for each button
+    HumanButton = tk.Button(selectionScreen, text = "Human vs AI",
+                            command=lambda: humanVsAi(selectionScreen),
+                            width=10, height=5,
+                            font=helv16,
+                            activeforeground="red", bg="light blue")
+
+    AiButton = tk.Button(selectionScreen, text = "AI vs AI",
+                            command=selectionScreen.destroy,
+                            width=10, height=5,
+                            font=helv16,
+                            activeforeground="red", bg="light blue")
+    HumanButton.place(x=60, y=100)
+    AiButton.place(x=300,y = 100)
+
+def humanVsAi(prevWindow):
+    prevWindow.destroy()
+    gameScreen = tk.Tk()
+    gameScreen.geometry("400x550")
+    for i in range(9):
+        if i < 2:
+            yCor = 100
+        if 3 <= i < 6:
+            yCor = 220
+        if i >= 6:
+            yCor = 340
+        cells[i]=tk.Button(gameScreen,
+                            width=15, height=7, highlightcolor="black")
+        cells[i].place(x=25+115*(i%3), y=yCor)
+
+    for i in range(3):
+        stacks1[i]=tk.Button(gameScreen,
+                            width=9, height=4, bg="blue", command=lambda:
+            removeFromStack(i))
+        stacks1[i].place(x=70 + i*90, y=15)
+
+    for i in range(3):
+        stacks2[i]=tk.Button(gameScreen,
+                            width=9, height=4, bg="red")
+        stacks2[i].place(x=70 + i*90, y=470)
+
+def removeFromStack(stackIndex: int) -> None:
+    print(stacks1[stackIndex].winfo_height())
+    if stacks1[stackIndex].winfo_width() == 73:
+        stacks1[stackIndex].config(width = MEDIUM_STACK_W)
+        stacks1[stackIndex].config(height=MEDIUM_STACK_H)
+
+
+
+
 
 
 if __name__ == '__main__':
