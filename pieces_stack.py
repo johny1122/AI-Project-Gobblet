@@ -26,6 +26,7 @@ class PiecesStack:
         if not self.is_empty():
             self.pieces.pop()
 
+
     def top(self) -> Union[None, Piece]:
         if not self.is_empty():
             return self.pieces[-1]

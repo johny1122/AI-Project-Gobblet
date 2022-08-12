@@ -4,8 +4,8 @@ from PIL import ImageTk, Image
 from globals import *
 
 cells = [0] * 9
-stacks1 = [0] * 3
-stacks2 = [0] * 3
+stacks = [0] * 6
+
 
 
 def main():
@@ -66,9 +66,13 @@ def humanVsAi(prevWindow, button1, button2, question):
     button1.destroy()
     button2.destroy()
     # global red_large_square, blue_large_square
-    red_large_square =  ImageTk.PhotoImage(Image.open('Images/red_square.png').resize((70, 70)))
+    red_large_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Large_Red_Square.png').resize((70, 70)))
 
-    blue_large_square = ImageTk.PhotoImage(Image.open('Images/blue_square.png').resize((70, 70)))
+    blue_large_square = ImageTk.PhotoImage(Image.open(
+        'Images/Large_Blue_Square.png').resize((70, 70)))
+    white_square = ImageTk.PhotoImage(Image.open(
+        'Images/whiteSquare.png').resize((110, 110)))
 
     # prevWindow.destroy()
     # gameScreen = tk.Tk()
@@ -80,29 +84,113 @@ def humanVsAi(prevWindow, button1, button2, question):
             yCor = 220
         if i >= 6:
             yCor = 340
-        cells[i] = tk.Button(prevWindow,
-                             width=15, height=7, highlightcolor="black", bg="white")
+        #TODO: set command to the right one with cell or piecesStack
+        cells[i] = tk.Button(prevWindow,highlightcolor="black",
+                             bg="white",image=white_square,
+                             command=lambda:changeCell(4,
+                                                                   "Medium",
+                                                                   "Red"))
+        cells[i].image = white_square
         cells[i].place(x=25 + 115 * (i % 3), y=yCor)
 
     for i in range(3):
-        stacks1[i] = tk.Button(prevWindow,
-                                image=blue_large_square, command=lambda: removeFromStack(i))
-        stacks1[i].image = blue_large_square
-        stacks1[i].place(x=70 + i * 90, y=15)
+        #TODO: change the command to move to piecesStack.pop
+        stacks[i] = tk.Button(prevWindow,
+                                image=blue_large_square, command=lambda:
+            removeFromStack(i, "Small"))
+        stacks[i].image = blue_large_square
+        stacks[i].place(x=70 + i * 90, y=15)
 
     for i in range(3):
-        stacks2[i] = tk.Button(prevWindow,
+        stacks[i+3] = tk.Button(prevWindow,
                                image=red_large_square)
-        stacks2[i].image = red_large_square
-        stacks2[i].place(x=70 + i * 90, y=470)
+        stacks[i+3].image = red_large_square
+        stacks[i+3].place(x=70 + i * 90, y=470)
 
 
-def removeFromStack(stackIndex: int) -> None:
-    pass
-    # print(stacks1[stackIndex].winfo_height())
-    # if stacks1[stackIndex].winfo_width() == 73:
-    #     stacks1[stackIndex].config(width=MEDIUM_STACK_W)
-    #     stacks1[stackIndex].config(height=MEDIUM_STACK_H)
+def removeFromStack(stackIndex: int, newSize: str) -> None:
+    red_large_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Large_Red_Square.png').resize((70, 70)))
+
+    blue_large_square = ImageTk.PhotoImage(Image.open(
+        'Images/Large_Blue_Square.png').resize((70, 70)))
+    red_medium_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Medium_Red_Square.png').resize((70, 70)))
+
+    blue_medium_square = ImageTk.PhotoImage(Image.open(
+        'Images/Medium_Blue_Square.png').resize((70, 70)))
+    red_small_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Small_Red_Square (5).png').resize((70, 70)))
+
+    blue_small_square = ImageTk.PhotoImage(Image.open(
+        'Images/Small_Blue_Square.png').resize((70, 70)))
+
+    if newSize == "Large":
+        if stackIndex < 3:
+            stacks[stackIndex].config(image = blue_large_square)
+            stacks[stackIndex].image = blue_large_square
+        else:
+            stacks[stackIndex].config(image = red_large_square)
+            stacks[stackIndex].image = red_large_square
+    elif newSize == "Medium":
+        if stackIndex < 3:
+            stacks[stackIndex].config(image = blue_medium_square)
+            stacks[stackIndex].image = blue_medium_square
+        else:
+            stacks[stackIndex].config(image = red_medium_square)
+            stacks[stackIndex].image = red_medium_square
+    elif newSize == "Small":
+        if stackIndex < 3:
+            stacks[stackIndex].config(image = blue_small_square)
+            stacks[stackIndex].image = blue_small_square
+        else:
+            stacks[stackIndex].config(image = red_small_square)
+            stacks[stackIndex].image = red_small_square
+
+def changeCell(cellIndex: int, newSize: int, color: str):
+    red_large_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Large_Red_Square.png').resize((110, 110)))
+
+    blue_large_square = ImageTk.PhotoImage(Image.open(
+        'Images/Large_Blue_Square.png').resize((110, 110)))
+    red_medium_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Medium_Red_Square.png').resize((110, 110)))
+
+    blue_medium_square = ImageTk.PhotoImage(Image.open(
+        'Images/Medium_Blue_Square.png').resize((110, 110)))
+    red_small_square =  ImageTk.PhotoImage(Image.open(
+        'Images/Small_Red_Square (5).png').resize((110, 110)))
+
+    blue_small_square = ImageTk.PhotoImage(Image.open(
+        'Images/Small_Blue_Square.png').resize((110, 110)))
+
+    if newSize == "Large":
+        if color == "Blue":
+            cells[cellIndex].config(image = blue_large_square)
+            cells[cellIndex].image = blue_large_square
+        else:
+            cells[cellIndex].config(image = red_large_square)
+            cells[cellIndex].image = red_large_square
+    elif newSize == "Medium":
+        if color == "Blue":
+            cells[cellIndex].config(image = blue_medium_square)
+            cells[cellIndex].image = blue_medium_square
+        else:
+            cells[cellIndex].config(image = red_medium_square)
+            cells[cellIndex].image = red_medium_square
+    if newSize == "Small":
+        if color == "Blue":
+            cells[cellIndex].config(image = blue_small_square)
+            cells[cellIndex].image = blue_small_square
+        else:
+            cells[cellIndex].config(image = red_small_square)
+            cells[cellIndex].image = red_small_square
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
