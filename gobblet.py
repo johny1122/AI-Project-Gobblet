@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import font, PhotoImage
 from PIL import ImageTk, Image
 from globals import *
+from location import *
 
 cells = [0] * 9
 stacks = [0] * 6
@@ -62,6 +63,9 @@ def setGameModes(prevWindow, button, image):
 
 
 def humanVsAi(prevWindow, button1, button2, question):
+    l1 = Location(0,2)
+    l2 = Location(1,2)
+    l3 = Location(2,2)
     question.destroy()
     button1.destroy()
     button2.destroy()
@@ -87,9 +91,7 @@ def humanVsAi(prevWindow, button1, button2, question):
         #TODO: set command to the right one with cell or piecesStack
         cells[i] = tk.Button(prevWindow,highlightcolor="black",
                              bg="white",image=white_square,
-                             command=lambda:changeCell(4,
-                                                                   "Medium",
-                                                                   "Red"))
+                             command=lambda:markWinner(l1,l2,l3))
         cells[i].image = white_square
         cells[i].place(x=25 + 115 * (i % 3), y=yCor)
 
@@ -186,6 +188,26 @@ def changeCell(cellIndex: int, newSize: int, color: str):
             cells[cellIndex].config(image = red_small_square)
             cells[cellIndex].image = red_small_square
 
+
+def markWinner(l1: Location, l2: Location, l3: Location):
+    cell1bg = cells[l1.row * 2 + l1.col].cget("background")
+    cell2bg = cells[l2.row * 2 + l2.col].cget("background")
+    cell3bg = cells[l3.row * 2 + l3.col].cget("background")
+
+    #TODO: how to make this flash?
+
+    cells[l1.row*2 + l1.col].config(bg="green")
+    # cells[l1.row*2+l1.col].after(200, lambda: cells[
+    #     l1.row*2+l1.col].config(
+    #     background=cell1bg))
+    cells[l2.row * 2 + l2.col].config(bg="green")
+    # cells[l2.row*2+l2.col].after(200, lambda: cells[
+    #     l2.row*2+l2.col].config(
+    #     background=cell2bg))
+    cells[l3.row * 2 + l3.col].config(bg="green")
+    # cells[l3.row*2+l3.col].after(200, lambda: cells[
+    #     l3.row*2+l3.col].config(
+    #     background=cell3bg))
 
 
 
