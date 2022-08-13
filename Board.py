@@ -34,10 +34,10 @@ class Board:
         return self.cells[location.row][location.col]
 
     def get_possible_pieces_outside(self, color: str) -> List[Piece]:
-        if color == WHITE:
-            stacks = self.stacks[WHITE]
-        elif color == BLACK:
-            stacks = self.stacks[BLACK]
+        if color == BLUE:
+            stacks = self.stacks[BLUE]
+        elif color == RED:
+            stacks = self.stacks[RED]
 
         possible_outsides = []
         for stack in stacks:
@@ -58,23 +58,23 @@ class Board:
         return self.get_possible_pieces_outside(color) + self.get_possible_pieces_inside(color)
 
     def count_colors_in_line(self, line: List[Location]) -> Tuple[int, int]:
-        whites, blacks = 0, 0
+        blues, reds = 0, 0
         for location in line:
             color = self.cells[location.row][location.col].color()
-            if color == WHITE:
-                whites += 1
-            else:  # black
-                blacks += 1
+            if color == BLUE:
+                blues += 1
+            else:  # red
+                reds += 1
 
-        return whites, blacks
+        return blues, reds
 
     def found_winner(self) -> Union[Tuple[bool, str, List[Location]], bool]:
         for line in self.lines:
-            whites, blacks = self.count_colors_in_line(line)
-            if whites == ROW_COL_LENGTH:
-                return True, WHITE, line
-            elif blacks == ROW_COL_LENGTH:
-                return True, BLACK, line
+            blues, reds = self.count_colors_in_line(line)
+            if blues == ROW_COL_LENGTH:
+                return True, BLUE, line
+            elif reds == ROW_COL_LENGTH:
+                return True, RED, line
 
         return False
 
@@ -100,12 +100,12 @@ class Board:
                 # check there are 2 opponent pieces in one of dest_cell's lines
                 lines_of_dest_cell = self.lines_of_cell(dest_cell)
                 for line in lines_of_dest_cell:
-                    whites, blacks = self.count_colors_in_line(line)
-                    if piece_to_move.color == WHITE:
-                        if blacks == ROW_COL_LENGTH - 1:
+                    blues, reds = self.count_colors_in_line(line)
+                    if piece_to_move.color == BLUE:
+                        if reds == ROW_COL_LENGTH - 1:
                             return True
-                    elif piece_to_move.color == BLACK:
-                        if whites == ROW_COL_LENGTH - 1:
+                    elif piece_to_move.color == RED:
+                        if blues == ROW_COL_LENGTH - 1:
                             return True
         return False
 
