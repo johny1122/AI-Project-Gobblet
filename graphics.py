@@ -1,4 +1,6 @@
 # graphics.py
+# TODO: remove file if not used
+
 """Simple object oriented graphics library  
 
 The library is designed to make it very easy for novice programmers to
@@ -785,7 +787,6 @@ class Entry(GraphicsObject):
     def __init__(self, p, width):
         GraphicsObject.__init__(self, [])
         self.anchor = p.clone()
-        #print self.anchor
         self.width = width
         self.text = tk.StringVar(_root)
         self.text.set("")

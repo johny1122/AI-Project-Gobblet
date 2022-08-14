@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="18f0edce-1bc3-4c87-856d-a834f9b50173" name="Changes" comment="" />
+    <list default="true" id="18f0edce-1bc3-4c87-856d-a834f9b50173" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/AI-Project-Gobblet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AI-Project-Gobblet.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gobblet.py" beforeDir="false" afterPath="$PROJECT_DIR$/gobblet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/location.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pieces_stack.py" beforeDir="false" afterPath="$PROJECT_DIR$/pieces_stack.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,13 +37,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Lenovo/Documents/AI-Project-Gobblet",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Lenovo/Documents/AI-Project-Gobblet/gobblet.py&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\My Drive\year3\year3-semesterB\AI\AI Project\AI-Project-Gobblet" />
@@ -47,14 +57,14 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Program Files\Python38\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\yuval\Documents\GitHub\AI-Project-Gobblet\gui.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gobblet.py" />
+      <option name="PARAMETERS" value="--display" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -133,6 +143,7 @@
       <workItem from="1660297035581" duration="4172000" />
       <workItem from="1660383247085" duration="3172000" />
       <workItem from="1660394091223" duration="4678000" />
+      <workItem from="1660487926434" duration="19249000" />
     </task>
     <servers />
   </component>
@@ -151,11 +162,11 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/gobblet_py$gobblet__1_.coverage" NAME="gobblet Coverage Results" MODIFIED="1660397319664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Board_py$Gobblet.coverage" NAME="Gobblet Coverage Results" MODIFIED="1660210207290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/gobblet-master" />
-    <SUITE FILE_PATH="coverage/gobblet_py$gobblet.coverage" NAME="gobblet Coverage Results" MODIFIED="1660395761302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Board_py$main.coverage" NAME="main Coverage Results" MODIFIED="1659956192843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Board_py$game.coverage" NAME="game Coverage Results" MODIFIED="1660210841462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/gobblet-master" />
     <SUITE FILE_PATH="coverage/Board_py$gobblet__1_.coverage" NAME="gobblet (1) Coverage Results" MODIFIED="1660215155510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Board_py$game.coverage" NAME="game Coverage Results" MODIFIED="1660210841462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/gobblet-master" />
+    <SUITE FILE_PATH="coverage/Board_py$Gobblet.coverage" NAME="Gobblet Coverage Results" MODIFIED="1660210207290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/gobblet-master" />
+    <SUITE FILE_PATH="coverage/Board_py$main.coverage" NAME="main Coverage Results" MODIFIED="1659956192843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gobblet_py$gobblet__1_.coverage" NAME="gobblet Coverage Results" MODIFIED="1660397319664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gobblet_py$gobblet.coverage" NAME="gobblet Coverage Results" MODIFIED="1660508639475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

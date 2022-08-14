@@ -4,11 +4,14 @@ from piece import Piece
 
 class PiecesStack:
 
-    def __init__(self, pieces=Union[None, List[Piece]]):
+    def __init__(self, pieces: Union[None, List[Piece]] = None):
         if pieces is None:
             self.pieces = []
         else:
             self.pieces = pieces
+
+    def get_size(self) -> int:
+        return len(self.pieces)
 
     def is_empty(self) -> bool:
         if not self.pieces:

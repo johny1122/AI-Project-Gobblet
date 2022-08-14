@@ -5,6 +5,7 @@ from pieces_stack import PiecesStack
 from location import Location
 from action import Action
 from globals import *
+from copy import *
 
 
 class Board:
@@ -16,6 +17,9 @@ class Board:
 
     def __init__(self):
         self.stacks = {color: [] for color in COLORS}
+        self.cells = []
+
+        # create stacks
         for color in COLORS:
             for stack_index in range(STACKS_NUM):
                 stack = PiecesStack()
@@ -23,14 +27,16 @@ class Board:
                     stack.add(Piece(size, color, stack_index))
                 self.stacks[color].append(stack)
 
-        self.cells = []
+        # create cells
         for row_index in range(ROW_COL_LENGTH):
             row = []
             for col_index in range(ROW_COL_LENGTH):
                 row.append(Cell(PiecesStack(), Location(row_index, col_index)))
             self.cells.append(row)
 
-    def get_cell(self, location: Location) -> Cell:
+    def get_cell(self, location: Location) -> Union[None, Cell]:
+        if location.is_outside():
+            return None
         return self.cells[location.row][location.col]
 
     def get_possible_pieces_outside(self, color: str) -> List[Piece]:
@@ -63,7 +69,7 @@ class Board:
             color = self.cells[location.row][location.col].color()
             if color == BLUE:
                 blues += 1
-            else:  # red
+            elif color == RED:  # red
                 reds += 1
 
         return blues, reds
@@ -87,6 +93,17 @@ class Board:
         src_cell = self.get_cell(action.src)
         dest_cell = self.get_cell(action.dest)
         piece_to_move = action.piece
+
+        if src_cell is None:  # src is outside (None means outside)
+            outside_stack = self.stacks[action.piece.color][action.piece.stack_index]
+            if len(outside_stack.pieces) == 0:  # src stack
+                return False
+
+        elif src_cell.is_empty():  # src is inside and empty
+            return False
+
+        if dest_cell.location.is_outside():
+            return False
 
         if dest_cell.is_empty():  # dest is empty
             return True
@@ -133,7 +150,8 @@ class Board:
         dest = action.dest
 
         # add piece to new location
-        self.cells[dest.row][dest.col].add(piece)
+        piece_copy = deepcopy(piece)
+        self.cells[dest.row][dest.col].add(piece_copy)
         self.cells[dest.row][dest.col].top().location = dest
 
         # remove piece from src stack
