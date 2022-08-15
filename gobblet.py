@@ -1,70 +1,92 @@
 import gui
-from gui import *
+import argparse
 from action import Action
 from Board import Board
 from location import Location
-import argparse
 from globals import *
+from Agents.random_agent import RandomAgent
+from Agents.reflex_agent import ReflexAgent
+from Agents.minimax_alpha_beta_agent import MinimaxAlpaBetaAgent
 
 board_game = Board()
-clicks_count = 1
+# clicks_count = 1
 
 
 def main(show_display, agents, iterations):
     global board_game
     board_game = Board()
     if show_display:
-        build_main_window()
+        gui.build_main_window()
 
     else:
-        # create agents
+        agents = []
+        for agent in agents:
+            if agent == RANDOM:
+                agents.append(RandomAgent)
+            elif agent == REFLEX:
+                agents.append(ReflexAgent)
+            # TODO: add more agents
 
-        pass
+
+def play(agent1, agent2):
+    # TODO
 
 
-def manual_move(is_outside: bool, index: int, color: str = None) -> None:
-    global src_piece, dest_piece, clicks_count, board_game
-    # TODO: check if the rule of adding from outside to row works!! (it doesnt..)
+    gui.apply_action(new_action, board_game)
+    #                 board_game.apply_action(new_action)
+    #                 turn_result = board_game.is_finished()
+    #                 if type(turn_result) == tuple:  # found winner
+    #                     gui.markWinner(turn_result[2][0], turn_result[2][1], turn_result[2][2])
+    #                     # TODO: stop game
+    #                 elif turn_result == DRAW:  # Draw
+    #                     # TODO - display a tie
+    #                     # TODO: stop game
+    #                     pass
+    # TODO - return play result
+    pass
 
-    piece = None
-    row, col = None, None
-    if is_outside:
-        stack_index = index
-        if color == BLUE:  # blue
-            piece = board_game.stacks[BLUE][stack_index].top()
-        elif color == RED:  # red
-            piece = board_game.stacks[RED][stack_index].top()
-
-    else:  # inside
-        cell_index = index
-        row, col = int(cell_index / 3), (cell_index % 3)
-        piece_location = Location(row, col)
-        piece = board_game.get_cell(piece_location).top()
-
-    if clicks_count == 1:
-        src_piece = piece
-        clicks_count += 1
-
-    elif clicks_count == 2:
-        if src_piece is not None and (row is not None and col is not None):
-            dest_piece = piece
-            new_action = Action(src_piece, src_piece.location, Location(row, col))
-
-            if board_game.is_action_legal(new_action):
-                gui.apply_action(new_action, board_game)
-                board_game.apply_action(new_action)
-                turn_result = board_game.is_finished()
-                if type(turn_result) == tuple:  # found winner
-                    gui.markWinner(turn_result[2][0], turn_result[2][1], turn_result[2][2])
-                    # TODO: stop game
-                elif turn_result == DRAW:  # Draw
-                    # TODO - display a tie
-                    # TODO: stop game
-                    pass
-
-        clicks_count = 1
-        src_piece = None
-        dest_piece = None
+# def manual_move(is_outside: bool, index: int, color: str = None) -> None:
+#     global src_piece, dest_piece, clicks_count, board_game
+#
+#     piece = None
+#     row, col = None, None
+#     if is_outside:
+#         stack_index = index
+#         if color == BLUE:  # blue
+#             piece = board_game.stacks[BLUE][stack_index].top()
+#         elif color == RED:  # red
+#             piece = board_game.stacks[RED][stack_index].top()
+#
+#     else:  # inside
+#         cell_index = index
+#         row, col = int(cell_index / 3), (cell_index % 3)
+#         piece_location = Location(row, col)
+#         piece = board_game.get_cell(piece_location).top()
+#
+#     if clicks_count == 1:
+#         src_piece = piece
+#         clicks_count += 1
+#
+#     elif clicks_count == 2:
+#         if src_piece is not None and (row is not None and col is not None):
+#             dest_piece = piece
+#             new_action = Action(src_piece, src_piece.location, Location(row, col))
+#
+#             if board_game.is_action_legal(new_action):
+#                 gui.apply_action(new_action, board_game)
+#                 board_game.apply_action(new_action)
+#                 turn_result = board_game.is_finished()
+#                 if type(turn_result) == tuple:  # found winner
+#                     gui.markWinner(turn_result[2][0], turn_result[2][1], turn_result[2][2])
+#                     # TODO: stop game
+#                 elif turn_result == DRAW:  # Draw
+#                     # TODO - display a tie
+#                     # TODO: stop game
+#                     pass
+#
+#         clicks_count = 1
+#         src_piece = None
+#         dest_piece = None
 
 
 if __name__ == '__main__':
@@ -76,8 +98,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    src_piece = None
-    dest_piece = None
+    # src_piece = None
+    # dest_piece = None
 
     agents_list = args.agents
     show_display = args.display

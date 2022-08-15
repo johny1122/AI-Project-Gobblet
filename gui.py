@@ -1,13 +1,18 @@
 from functools import partial
 from tkinter import font
+from typing import Tuple
+
 from PIL import ImageTk, Image
 from action import Action
 from Board import Board
-from gobblet import manual_move
 from piece import *
 
 cells = [0] * 9
-stacks = {color: [0]*STACKS_NUM for color in COLORS}
+stacks = {color: [0] * STACKS_NUM for color in COLORS}
+
+clicks_count = 1
+src_tuple = (True, 1, BLUE)  # (is_outside, index, color)
+dest_tuple = (True, 1, BLUE)  # (is_outside, index, color)
 
 
 def build_main_window():
@@ -22,8 +27,7 @@ def build_main_window():
 
     imgLabel = tk.Label(imgFrame, image=startingImg)
     imgLabel.pack()
-    # TODO: change command to a function allowing to select modes (human vs
-    # AI, AI vs AI)
+    # TODO: change command to a function allowing to select modes (human vs AI, AI vs AI)
     startButton = tk.Button(helloScreen, text="Start",
                             command=lambda: setGameModes(helloScreen, startButton, imgFrame),
 
@@ -34,8 +38,22 @@ def build_main_window():
     helloScreen.mainloop()
 
 
+def store_clicks(is_outside: bool, index: int, color: str = None) -> None:
+    global src_tuple, dest_tuple, clicks_count
+
+    if clicks_count == 1:
+        src_tuple = is_outside, index, color
+        clicks_count += 1
+    elif clicks_count == 2:
+        dest_tuple = is_outside, index, color
+        clicks_count = 1
+
+
+def get_clicks() -> Tuple[Tuple[bool, int, str], Tuple[bool, int, str]]:
+    return src_tuple, dest_tuple
+
+
 def setGameModes(prevWindow, button, image):
-    # prevWindow.destroy()
     button.destroy()
     image.destroy()
     prevWindow.geometry("500x300")
@@ -66,7 +84,6 @@ def setGameModes(prevWindow, button, image):
 
 
 def buildBoard(prevWindow, button1, button2, question):
-
     question.destroy()
     button1.destroy()
     button2.destroy()
@@ -87,19 +104,20 @@ def buildBoard(prevWindow, button1, button2, question):
         if i >= 6:
             yCor = 340
         cells[i] = tk.Button(prevWindow, highlightcolor="black", bg="white", image=white_square,
-                             command=partial(manual_move, False, i))
+                             command=partial(store_clicks, False, i))
         cells[i].image = white_square
         cells[i].place(x=25 + 115 * (i % 3), y=yCor)
 
     for i in range(STACKS_NUM):
-        stacks[BLUE][i] = tk.Button(prevWindow, image=blue_large_square, command=partial(manual_move, True, i, BLUE))
+        stacks[BLUE][i] = tk.Button(prevWindow, image=blue_large_square,
+                                    command=partial(store_clicks, True, i, BLUE))
         stacks[BLUE][i].image = blue_large_square
-        stacks[BLUE][i] .place(x=110 + i * 90, y=15)
+        stacks[BLUE][i].place(x=110 + i * 90, y=15)
 
     for i in range(STACKS_NUM):
         stacks[RED][i] = tk.Button(prevWindow,
-                                           image=red_large_square,
-                                           command=partial(manual_move, True, i, RED))
+                                   image=red_large_square,
+                                   command=partial(store_clicks, True, i, RED))
         stacks[RED][i].image = red_large_square
         stacks[RED][i].place(x=110 + i * 90, y=470)
 
@@ -150,7 +168,6 @@ def removeFromStack(color: str, stackIndex: int, newSize: int) -> None:
         else:
             stacks[RED][stackIndex].config(image=white_square)
             stacks[RED][stackIndex].image = white_square
-
 
 
 def changeCell(cellIndex: Location, newSize: int, color: str) -> None:
@@ -240,7 +257,7 @@ def markWinner(l1: Location, l2: Location, l3: Location):
     # cell3bg = cells[l3.row * 2 + l3.col].cget("background")
 
     # TODO: how to make this flash?
-    #TODO: how to increase border size?
+    # TODO: how to increase border size?
 
     cells[l1.row * 3 + l1.col].config(bg="green")
     # cells[l1.row*2+l1.col].after(200, lambda: cells[

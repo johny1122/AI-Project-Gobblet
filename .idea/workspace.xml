@@ -3,14 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="18f0edce-1bc3-4c87-856d-a834f9b50173" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Agents/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Agents/agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Agents/minimax_alpha_beta_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Agents/minimax_alpha_beta_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Agents/random_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Agents/random_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Agents/reflex_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Agents/reflex_agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Agents/human_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Agents/human_agent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/globals.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gobblet.py" beforeDir="false" afterPath="$PROJECT_DIR$/gobblet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/state.py" beforeDir="false" afterPath="$PROJECT_DIR$/state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
