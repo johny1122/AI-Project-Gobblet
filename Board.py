@@ -108,9 +108,10 @@ class Board:
         if dest_cell.is_empty():  # dest is empty
             return True
 
+        is_src_outside = (src_cell == None)
         # dest is not empty
         if dest_cell.top().size < piece_to_move.size:  # dest size smaller than piece_to_move
-            if not src_cell.location.is_outside():  # src is inside board
+            if not is_src_outside:  # src is inside board
                 return True
 
             else:  # src is outside board
