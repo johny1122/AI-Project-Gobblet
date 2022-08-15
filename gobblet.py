@@ -10,11 +10,16 @@ board_game = Board()
 clicks_count = 1
 
 
-def main(show_display):
+def main(show_display, agents, iterations):
     global board_game
     board_game = Board()
     if show_display:
         build_main_window()
+
+    else:
+        # create agents
+
+        pass
 
 
 def manual_move(is_outside: bool, index: int, color: str = None) -> None:
@@ -22,6 +27,7 @@ def manual_move(is_outside: bool, index: int, color: str = None) -> None:
     # TODO: check if the rule of adding from outside to row works!! (it doesnt..)
 
     piece = None
+    row, col = None, None
     if is_outside:
         stack_index = index
         if color == BLUE:  # blue
@@ -40,16 +46,21 @@ def manual_move(is_outside: bool, index: int, color: str = None) -> None:
         clicks_count += 1
 
     elif clicks_count == 2:
-        if src_piece is not None:
+        if src_piece is not None and (row is not None and col is not None):
             dest_piece = piece
             new_action = Action(src_piece, src_piece.location, Location(row, col))
 
             if board_game.is_action_legal(new_action):
                 gui.apply_action(new_action, board_game)
                 board_game.apply_action(new_action)
-                turn_result = board_game.found_winner()
-                if type(turn_result) == tuple:
+                turn_result = board_game.is_finished()
+                if type(turn_result) == tuple:  # found winner
                     gui.markWinner(turn_result[2][0], turn_result[2][1], turn_result[2][2])
+                    # TODO: stop game
+                elif turn_result == DRAW:  # Draw
+                    # TODO - display a tie
+                    # TODO: stop game
+                    pass
 
         clicks_count = 1
         src_piece = None
@@ -59,10 +70,16 @@ def manual_move(is_outside: bool, index: int, color: str = None) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
+    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int)
+    parser.add_argument('--agents', help='List of agents to run each one against the others', nargs='+',
+                        default=[], type=str)
 
     args = parser.parse_args()
 
     src_piece = None
     dest_piece = None
 
-    main(args.display)
+    agents_list = args.agents
+    show_display = args.display
+    iterations = args.iterations
+    main(show_display, agents_list, iterations)

@@ -145,6 +145,23 @@ class Board:
 
         return legal_actions
 
+    def is_draw(self):  # draw is when board is full
+        for row in self.cells:
+            for cell in row:
+                if cell.is_empty():
+                    return False
+        return True
+
+    def is_finished(self):
+        turn_result = self.found_winner()
+        if type(turn_result) == tuple:
+            return turn_result
+
+        elif self.is_draw():
+            return DRAW
+
+        return False
+
     def apply_action(self, action: Action) -> None:
         piece = action.piece
         src = action.src
