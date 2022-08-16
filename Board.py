@@ -47,7 +47,8 @@ class Board:
 
         possible_outsides = []
         for stack in stacks:
-            possible_outsides.append(stack.top())
+            if stack.top() is not None:
+                possible_outsides.append(stack.top())
 
         return possible_outsides
 
@@ -55,8 +56,9 @@ class Board:
         inside_pieces = []
         for row in self.cells:
             for cell in row:
-                if cell.color == color:
-                    inside_pieces.append(cell.top())
+                if cell.color() == color:
+                    if cell.top() is not None:
+                        inside_pieces.append(cell.top())
 
         return inside_pieces
 
@@ -108,7 +110,7 @@ class Board:
         if dest_cell.is_empty():  # dest is empty
             return True
 
-        is_src_outside = (src_cell == None)
+        is_src_outside = (src_cell is None)
         # dest is not empty
         if dest_cell.top().size < piece_to_move.size:  # dest size smaller than piece_to_move
             if not is_src_outside:  # src is inside board

@@ -7,3 +7,6 @@ class Action:
         self.piece = piece
         self.src = source
         self.dest = destination
+
+    def __eq__(self, other):
+        return (self.piece == other.piece) and (self.src == other.src) and (self.dest == other.dest)

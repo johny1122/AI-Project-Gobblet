@@ -1,7 +1,6 @@
 from functools import partial
 from tkinter import font
 from typing import Tuple
-
 from PIL import ImageTk, Image
 from action import Action
 from Board import Board
@@ -11,8 +10,8 @@ cells = [0] * 9
 stacks = {color: [0] * STACKS_NUM for color in COLORS}
 
 clicks_count = 1
-src_tuple = (True, 1, BLUE)  # (is_outside, index, color)
-dest_tuple = (True, 1, BLUE)  # (is_outside, index, color)
+src_tuple = None
+dest_tuple = None
 
 
 def build_main_window():
@@ -40,8 +39,8 @@ def build_main_window():
 
 def store_clicks(is_outside: bool, index: int, color: str = None) -> None:
     global src_tuple, dest_tuple, clicks_count
-
     if clicks_count == 1:
+        dest_tuple = None
         src_tuple = is_outside, index, color
         clicks_count += 1
     elif clicks_count == 2:
@@ -83,10 +82,18 @@ def setGameModes(prevWindow, button, image):
     AiButton.place(x=300, y=100)
 
 
-def buildBoard(prevWindow, button1, button2, question):
-    question.destroy()
-    button1.destroy()
-    button2.destroy()
+def buildBoard(prevWindow=None, button1=None, button2=None, question=None):
+    if prevWindow != None:
+        question.destroy()
+        button1.destroy()
+        button2.destroy()
+        window = prevWindow
+    else:
+        window = tk.Tk()
+
+    window.title('Gobblet')
+    window.geometry("400x550")
+
     red_large_square = ImageTk.PhotoImage(Image.open(
         'Images/Large_Red_Square.png').resize((70, 70)))
 
@@ -95,7 +102,6 @@ def buildBoard(prevWindow, button1, button2, question):
     white_square = ImageTk.PhotoImage(Image.open(
         'Images/whiteSquare.png').resize((110, 110)))
 
-    prevWindow.geometry("400x550")
     for i in range(9):
         if i < 2:
             yCor = 100
@@ -103,23 +109,25 @@ def buildBoard(prevWindow, button1, button2, question):
             yCor = 220
         if i >= 6:
             yCor = 340
-        cells[i] = tk.Button(prevWindow, highlightcolor="black", bg="white", image=white_square,
+        cells[i] = tk.Button(window, highlightcolor="black", bg="white", image=white_square,
                              command=partial(store_clicks, False, i))
         cells[i].image = white_square
         cells[i].place(x=25 + 115 * (i % 3), y=yCor)
 
     for i in range(STACKS_NUM):
-        stacks[BLUE][i] = tk.Button(prevWindow, image=blue_large_square,
+        stacks[BLUE][i] = tk.Button(window, image=blue_large_square,
                                     command=partial(store_clicks, True, i, BLUE))
         stacks[BLUE][i].image = blue_large_square
         stacks[BLUE][i].place(x=110 + i * 90, y=15)
 
     for i in range(STACKS_NUM):
-        stacks[RED][i] = tk.Button(prevWindow,
+        stacks[RED][i] = tk.Button(window,
                                    image=red_large_square,
                                    command=partial(store_clicks, True, i, RED))
         stacks[RED][i].image = red_large_square
         stacks[RED][i].place(x=110 + i * 90, y=470)
+
+    window.mainloop()
 
 
 def removeFromStack(color: str, stackIndex: int, newSize: int) -> None:
@@ -249,6 +257,24 @@ def apply_action(action: Action, board: Board):
     newColor = action.piece.color
 
     changeCell(destCellIndex, destNewSize, newColor)
+
+
+def disable_buttons():
+    global cells
+    for cell in cells:
+        cell['state'] = 'disabled'
+    for listofbuttons in stacks.values():
+        for button in listofbuttons:
+            button['state'] = 'disabled'
+
+
+def enable_buttons():
+    global cells
+    for cell in cells:
+        cell['state'] = 'normal'
+    for listofbuttons in stacks.values():
+        for button in listofbuttons:
+            button['state'] = 'normal'
 
 
 def markWinner(l1: Location, l2: Location, l3: Location):

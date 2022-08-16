@@ -1,5 +1,9 @@
 import random
-from agent import *
+import math
+from Agents.agent import Agent
+from globals import *
+from state import State
+from action import Action
 
 
 class MinimaxAlpaBetaAgent(Agent):
@@ -12,6 +16,10 @@ class MinimaxAlpaBetaAgent(Agent):
         self.depth = depth
         self.with_random = with_random
         self.random_value = 3
+        self.name = MINIMAX
+        if with_random:
+            self.name += f'_{heuristic.__name__}'
+
 
     def alpha_beta_recursion(self, curr_depth, agent_turn, curr_state: State, alpha, beta):
         if curr_depth == 0 or curr_state.is_terminal():  # reached a leaf  or  finished game
@@ -50,7 +58,7 @@ class MinimaxAlpaBetaAgent(Agent):
 
             return min_score
 
-    def get_action(self, state):
+    def get_action(self, state) -> Action:
         if self.with_random:
             if random.random() < (5.0 / (self.random_value**2)):
                 self.random_value += 0.1

@@ -13,9 +13,13 @@ DRAW = 'DRAW'
 COLORS = [BLUE, RED]
 SIZES = [SMALL, MEDIUM, LARGE]
 STACKS_NUM = 2
+TOTAL_ACTIONS = 'total_actions'
+TOTAL_TIME = 'total_time'
+AVG_ACTION_TIME = 'avg_action_time'
 
 # Agents
 RANDOM = 'R'
 REFLEX = 'RX'
 MINIMAX = 'MM'
 MINIMAX_DEV = 'MMD'
+HUMAN = 'H'
