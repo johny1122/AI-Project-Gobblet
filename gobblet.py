@@ -6,10 +6,15 @@ from Board import Board
 from globals import *
 from state import State
 from action import Action
+
+# Agents
 from Agents.random_agent import RandomAgent
 from Agents.reflex_agent import ReflexAgent
 from Agents.human_agent import HumanAgent
 from Agents.minimax_alpha_beta_agent import MinimaxAlpaBetaAgent
+
+# Heuristics
+from Heuristics.offensive import offensive_heuristic
 
 
 class Analyzer:
@@ -51,11 +56,10 @@ def run_all_matches(agents_list, iterations: int, show_display: bool):
 
 
 def run_match(agent1, agent2, iterations: int, show_display: bool):
-    # if show_display:
-    #     gui.build_main_window()
     # TODO
     pass
     results = {color: {'wins': 0, 'avg_actions': 0} for color in COLORS}
+    # TODO: print_results
 
 
 def play(agent1, agent2, show_display: bool = False):
@@ -78,6 +82,7 @@ def play(agent1, agent2, show_display: bool = False):
         player_turn = change_turn(player_turn)
         curr_player, opponent = opponent, curr_player
 
+    # TODO: calculate avg from analyzer
     game_result = state.board.is_finished()
     winner = None
     if type(game_result) == tuple:  # found winner
@@ -101,6 +106,7 @@ def play(agent1, agent2, show_display: bool = False):
     return game_result, analyzer, winner
 
 
+# TODO
 # def print_results(agent1, agent2, results, iterations):
 #     print(' =====  Results  =====')
 #     print(f'Agent {agent1.__name__} vs {agent2.__name__}:' % (first_agent_type, second_agent_type)
@@ -185,10 +191,12 @@ if __name__ == '__main__':
 
     show_display = True
     if show_display:
-        play_thread = threading.Thread(target=play, args=[RandomAgent(), HumanAgent(), True])
+        # play_thread = threading.Thread(target=play, args=[RandomAgent(), HumanAgent(), True])
+        play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(offensive_heuristic, depth=1, with_random=False), HumanAgent(), True])
         window_thread = threading.Thread(target=gui.buildBoard)
         play_thread.start()
         window_thread.start()
 
     else:
+        # TODO
         pass
