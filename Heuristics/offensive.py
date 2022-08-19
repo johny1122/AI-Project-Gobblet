@@ -11,16 +11,15 @@ def offensive_heuristic(state: State) -> int:
 
     result = state.board.is_finished()
     if result:  # a player won or draw
-        print('fuck', player_color)
-        print(result)
+
         # draw
         if result == DRAW:
             score += 0
         # has winner
         elif result[1] == player_color:
             score += sys.maxsize
-            print('here')
-            print(score)
+            # print (player_color)
+            # print(score)
         elif result[1] != player_color:
             score -= sys.maxsize
 

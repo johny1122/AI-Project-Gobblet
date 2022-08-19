@@ -191,8 +191,12 @@ if __name__ == '__main__':
 
     show_display = True
     if show_display:
-        # play_thread = threading.Thread(target=play, args=[RandomAgent(), HumanAgent(), True])
-        play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(offensive_heuristic, depth=1, with_random=False), HumanAgent(), True])
+        play_thread = threading.Thread(target=play, args=[
+            MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
+                                 with_random=False), ReflexAgent(), True])
+        # play_thread = threading.Thread(target=play, args=[
+        #     MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
+        #                          with_random=False), HumanAgent(), True])
         window_thread = threading.Thread(target=gui.buildBoard)
         play_thread.start()
         window_thread.start()
