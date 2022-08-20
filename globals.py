@@ -1,4 +1,18 @@
 import tkinter as tk
+
+
+class Style:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 MAX = 0
 MIN = 1
 BLUE = 'BLUE'
@@ -16,10 +30,14 @@ STACKS_NUM = 2
 TOTAL_ACTIONS = 'total_actions'
 TOTAL_TIME = 'total_time'
 AVG_ACTION_TIME = 'avg_action_time'
+WINS = 'wins'
+HUNDRED_FLOAT = 100.0
+SECONDS_TO_MILLISECONDS = 1000.0
 
 # Agents
+HUMAN = 'H'
 RANDOM = 'R'
 REFLEX = 'RX'
-MINIMAX = 'MM'
-MINIMAX_DEV = 'MMD'
-HUMAN = 'H'
+MINIMAX_GENERAL = 'MM_G'
+MINIMAX_DEV_GENERAL = 'MMD_G'
+ALL_AGENTS = [HUMAN, RANDOM, REFLEX, MINIMAX_GENERAL, MINIMAX_DEV_GENERAL]

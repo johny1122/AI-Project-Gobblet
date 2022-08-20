@@ -1,5 +1,4 @@
 import random
-import math
 import sys
 from Agents.agent import Agent
 from globals import *
@@ -12,17 +11,16 @@ class MinimaxAlpaBetaAgent(Agent):
     MiniMax agent with alpha-beta pruning
     """
 
-    def __init__(self, heuristic, depth: int, with_random: bool):
+    def __init__(self, heuristic, depth: int, name: str, with_random: bool):
         self.evaluation_function = heuristic
         self.depth = depth
         self.with_random = with_random
         self.random_value = 3
-        self.name = MINIMAX
+        self.name = name
         if with_random:
             self.name += f'_{heuristic.__name__}'
 
     def alpha_beta_recursion(self, curr_depth, agent_turn, curr_state: State, alpha, beta):
-        # if curr_depth == 0 or curr_state.is_terminal():  # reached a leaf  or  finished game
         if curr_depth == 0:  # reached a leaf  or  finished game
             return self.evaluation_function(curr_state)
 
@@ -74,10 +72,8 @@ class MinimaxAlpaBetaAgent(Agent):
             # print(f'count2: {count}')
             return min_score
 
-
     def minimax_recursion(self, curr_depth, agent_turn, curr_state: State):
         if curr_depth == 0:  # reached a leaf
-
             return self.evaluation_function(curr_state)
 
         children_scores = []
@@ -112,5 +108,5 @@ class MinimaxAlpaBetaAgent(Agent):
         return self.alpha_beta_recursion(self.depth, MAX, state, -sys.maxsize,
                                          sys.maxsize)
 
-
-
+    def get_name(self) -> str:
+        return self.name

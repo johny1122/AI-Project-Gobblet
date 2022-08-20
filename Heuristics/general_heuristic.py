@@ -5,7 +5,7 @@ from globals import *
 from typing import List
 
 
-def offensive_heuristic(state: State) -> int:
+def general_heuristic(state: State) -> int:
     score = 0
     player_color = state.player_turn
 

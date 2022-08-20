@@ -1,7 +1,9 @@
+import sys
 import gui
 import argparse
 import time
 import threading
+from itertools import combinations
 from Board import Board
 from globals import *
 from state import State
@@ -14,7 +16,7 @@ from Agents.human_agent import HumanAgent
 from Agents.minimax_alpha_beta_agent import MinimaxAlpaBetaAgent
 
 # Heuristics
-from Heuristics.offensive import offensive_heuristic
+from Heuristics.general_heuristic import general_heuristic
 
 
 class Analyzer:
@@ -46,20 +48,39 @@ def run_all_matches(agents_list, iterations: int, show_display: bool):
             agents.append(RandomAgent())
         elif agent == REFLEX:
             agents.append(ReflexAgent())
+        elif agent == MINIMAX_GENERAL:
+            agents.append(
+                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=2, name=MINIMAX_GENERAL,
+                                     with_random=False))
+        elif agent == MINIMAX_DEV_GENERAL:
+            agents.append(
+                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_DEV_GENERAL,
+                                     with_random=True))
         # TODO: add more agents
 
-    for agent1 in agents:
-        for agent2 in agents:
-            if agent1.get_name() == agent2.get_name():
-                continue
-            run_match(agent1, agent2, iterations, show_display)
+    agents_matches = combinations(agents, 2)
+    for agent1, agent2 in agents_matches:
+        print(f'{Style.HEADER}===== {agent1.get_name()} vs {agent2.get_name()} ====={Style.ENDC}')
+        run_match(agent1, agent2, iterations, show_display)
 
 
 def run_match(agent1, agent2, iterations: int, show_display: bool):
-    # TODO
-    pass
-    results = {color: {'wins': 0, 'avg_actions': 0} for color in COLORS}
-    # TODO: print_results
+    results = {color: {WINS: 0, AVG_ACTION_TIME: 0} for color in COLORS}
+    results[DRAW] = 0
+    for match in range(iterations):
+        analyzer, winner = play(agent1, agent2, show_display)
+        analyzer.calculate_avg_time()
+        results[BLUE][AVG_ACTION_TIME] += analyzer.data[BLUE][AVG_ACTION_TIME]
+        results[RED][AVG_ACTION_TIME] += analyzer.data[RED][AVG_ACTION_TIME]
+
+        if winner is not None:
+            if winner == agent1.get_name():
+                results[BLUE][WINS] += 1
+            elif winner == agent2.get_name():
+                results[RED][WINS] += 1
+        else:
+            results[DRAW] += 1
+    print_results(agent1.get_name(), agent2.get_name(), results, iterations)
 
 
 def play(agent1, agent2, show_display: bool = False):
@@ -82,19 +103,25 @@ def play(agent1, agent2, show_display: bool = False):
         player_turn = change_turn(player_turn)
         curr_player, opponent = opponent, curr_player
 
-    # TODO: calculate avg from analyzer
     game_result = state.board.is_finished()
     winner = None
     if type(game_result) == tuple:  # found winner
         winner = game_result[1]  # winner color
         if winner == BLUE:
-            winner = agent1
+            winner = agent1.get_name()
         else:
-            winner = agent2
+            winner = agent2.get_name()
         if show_display:
             gui.markWinner(game_result[2][0], game_result[2][1], game_result[2][2])
         else:
-            print(f'{agent1.get_name()} vs {agent2.get_name()}: {winner.get_name()} Won! ({game_result[1]})')
+            if game_result[1] == BLUE:
+                print(
+                    f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
+                    f'({Style.OKBLUE}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
+            elif game_result[1] == RED:
+                print(
+                    f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
+                    f'({Style.FAIL}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
 
     elif game_result == DRAW:  # Draw
         if show_display:
@@ -103,24 +130,19 @@ def play(agent1, agent2, show_display: bool = False):
         else:
             print(f'{agent1.get_name()} vs {agent2.get_name()}: Draw!')
 
-    return game_result, analyzer, winner
+    return analyzer, winner
 
 
-# TODO
-# def print_results(agent1, agent2, results, iterations):
-#     print(' =====  Results  =====')
-#     print(f'Agent {agent1.__name__} vs {agent2.__name__}:' % (first_agent_type, second_agent_type)
-#     '%s wins:\t%s. avg_move:\t%5f ms' % (first_agent_type,
-#                                          (100.0 * wins[X_PLAYER]) / session_size,
-#                                          (1000.0 * avg_move[X_PLAYER]) / session_size)
-#     print
-#     '%s wins:\t%s. avg_move:\t%5f ms' % (second_agent_type,
-#                                          (100.0 * wins[Y_PLAYER]) / session_size,
-#                                          (1000.0 * avg_move[Y_PLAYER]) / session_size)
-#     print
-#     '%s:\t%s.' % ('Ties', (100.0 * wins['None']) / session_size)
-#     print
-#     '--------------' * 4
+def print_results(agent1: str, agent2: str, results, iterations: int) -> None:
+    print('------- Results -------')
+    # print(f'Agent {agent1} vs {agent2}: ')
+    for color, agent in zip(COLORS, [agent1, agent2]):
+        print(
+            f'{agent} wins:\t{results[color][WINS]}\t{(results[color][WINS] * HUNDRED_FLOAT) / iterations}%\t'
+            f' avg_action:\t'
+            f'{round(((results[color][AVG_ACTION_TIME] * SECONDS_TO_MILLISECONDS) / iterations), 3)} ms')
+
+    print(f'draws:\t{(results[DRAW] * HUNDRED_FLOAT) / iterations}\n')
 
 
 def change_turn(player_turn: str) -> str:
@@ -177,30 +199,46 @@ def change_turn(player_turn: str) -> str:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
-    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int)
+    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
     parser.add_argument('--agents',
-                        help=f'List of agents to run each one against the others: {RANDOM}/{REFLEX}/{MINIMAX}/{MINIMAX_DEV}',
+                        help=f'List of agents to run each one against the others: {ALL_AGENTS}',
                         nargs='+',
                         default=[], type=str)
     args = parser.parse_args()
 
-    # agents_list = args.agents
-    # show_display = args.display
-    # iterations = args.iterations
-    # run_all_matches(agents_list, iterations, show_display)
+    agents_list = args.agents
+    show_display = args.display
+    iterations = args.iterations
 
-    show_display = True
+    if len(agents_list) == 1:
+        print(
+            f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
+            f'(look at globals.py for explanations)',
+            file=sys.stderr)
+        exit(1)
+
+    # show_display = True  # TODO - delete
     if show_display:
-        play_thread = threading.Thread(target=play, args=[
-            MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
-                                 with_random=False), ReflexAgent(), True])
-        # play_thread = threading.Thread(target=play, args=[
-        #     MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
-        #                          with_random=False), HumanAgent(), True])
-        window_thread = threading.Thread(target=gui.buildBoard)
-        play_thread.start()
-        window_thread.start()
+        if len(agents_list) == 2:
+            play_thread = threading.Thread(target=play, args=[
+                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
+                                     with_random=False), RandomAgent(), True])
+            # play_thread = threading.Thread(target=play, args=[
+            #     MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
+            #                          with_random=False), HumanAgent(), True])
+            window_thread = threading.Thread(target=gui.buildBoard)
+            play_thread.start()
+            window_thread.start()
+        else:
+            print(f'Should display game only of a game of 2 agents. got {len(agents_list)}', file=sys.stderr)
 
-    else:
-        # TODO
-        pass
+    else:  # run without display
+        agents_without_human = ALL_AGENTS
+        agents_without_human.remove(HUMAN)
+        if HUMAN in agents_list:
+            print(f'Can\'t run Human agent without display. Available agents: {agents_without_human} '
+                  f'(look at globals.py for explanations)',
+                  file=sys.stderr)
+            exit(1)
+
+        run_all_matches(agents_list, iterations, show_display)
