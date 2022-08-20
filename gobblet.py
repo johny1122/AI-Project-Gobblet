@@ -220,12 +220,12 @@ if __name__ == '__main__':
     # show_display = True  # TODO - delete
     if show_display:
         if len(agents_list) == 2:
-            play_thread = threading.Thread(target=play, args=[
-                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
-                                     with_random=False), RandomAgent(), True])
             # play_thread = threading.Thread(target=play, args=[
-            #     MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
-            #                          with_random=False), HumanAgent(), True])
+            #     MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
+            #                          with_random=False), RandomAgent(), True])
+            play_thread = threading.Thread(target=play, args=[
+                MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
+                                     with_random=False), HumanAgent(), True])
             window_thread = threading.Thread(target=gui.buildBoard)
             play_thread.start()
             window_thread.start()
