@@ -78,7 +78,9 @@ class Board:
 
     def found_winner(self) -> Union[Tuple[bool, str, List[Location]], bool]:
         for line in self.lines:
+
             blues, reds = self.count_colors_in_line(line)
+            # print("blues ",blues,"   reds ",reds)
             if blues == ROW_COL_LENGTH:
                 return True, BLUE, line
             elif reds == ROW_COL_LENGTH:

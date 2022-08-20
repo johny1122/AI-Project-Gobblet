@@ -17,6 +17,7 @@ from Agents.minimax_alpha_beta_agent import MinimaxAlpaBetaAgent
 
 # Heuristics
 from Heuristics.general_heuristic import general_heuristic
+from Heuristics.corners_heuristic import corners_heuristic
 
 
 class Analyzer:
@@ -50,12 +51,19 @@ def run_all_matches(agents_list, iterations: int, show_display: bool):
             agents.append(ReflexAgent())
         elif agent == MINIMAX_GENERAL:
             agents.append(
-                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=2, name=MINIMAX_GENERAL,
+                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1,
+                                     name=MINIMAX_GENERAL,
                                      with_random=False))
         elif agent == MINIMAX_DEV_GENERAL:
             agents.append(
                 MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_DEV_GENERAL,
                                      with_random=True))
+        elif agent == MINIMAX_CORNERS:
+            agents.append(
+                MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
+                                     name=MINIMAX_CORNERS,
+                                     with_random=False))
+
         # TODO: add more agents
 
     agents_matches = combinations(agents, 2)
@@ -197,48 +205,64 @@ def change_turn(player_turn: str) -> str:
 ##########################################################
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
-    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
-    parser.add_argument('--agents',
-                        help=f'List of agents to run each one against the others: {ALL_AGENTS}',
-                        nargs='+',
-                        default=[], type=str)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
+    # parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
+    # parser.add_argument('--agents',
+    #                     help=f'List of agents to run each one against the others: {ALL_AGENTS}',
+    #                     nargs='+',
+    #                     default=[], type=str)
+    # args = parser.parse_args()
+    #
+    # agents_list = args.agents
+    # show_display = args.display
+    # iterations = args.iterations
+    #
+    # if len(agents_list) == 1:
+    #     print(
+    #         f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
+    #         f'(look at globals.py for explanations)',
+    #         file=sys.stderr)
+    #     exit(1)
+    #
+    # # show_display = True  # TODO - delete
+    # if show_display:
+    #     if len(agents_list) == 2:
+    #         # play_thread = threading.Thread(target=play, args=[
+    #         #     MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
+    #         #                          with_random=False), RandomAgent(), True])
+    #         play_thread = threading.Thread(target=play, args=[
+    #             MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
+    #                                  with_random=False), HumanAgent(), True])
+    #         window_thread = threading.Thread(target=gui.buildBoard)
+    #         play_thread.start()
+    #         window_thread.start()
+    #     else:
+    #         print(f'Should display game only of a game of 2 agents. got {len(agents_list)}', file=sys.stderr)
+    #
+    # else:  # run without display
+    #     agents_without_human = ALL_AGENTS
+    #     agents_without_human.remove(HUMAN)
+    #     if HUMAN in agents_list:
+    #         print(f'Can\'t run Human agent without display. Available agents: {agents_without_human} '
+    #               f'(look at globals.py for explanations)',
+    #               file=sys.stderr)
+    #         exit(1)
+    #
+    #     run_all_matches(agents_list, iterations, show_display)
 
-    agents_list = args.agents
-    show_display = args.display
-    iterations = args.iterations
 
-    if len(agents_list) == 1:
-        print(
-            f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
-            f'(look at globals.py for explanations)',
-            file=sys.stderr)
-        exit(1)
-
-    # show_display = True  # TODO - delete
-    if show_display:
-        if len(agents_list) == 2:
-            # play_thread = threading.Thread(target=play, args=[
-            #     MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
-            #                          with_random=False), RandomAgent(), True])
-            play_thread = threading.Thread(target=play, args=[
-                MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
-                                     with_random=False), HumanAgent(), True])
-            window_thread = threading.Thread(target=gui.buildBoard)
-            play_thread.start()
-            window_thread.start()
-        else:
-            print(f'Should display game only of a game of 2 agents. got {len(agents_list)}', file=sys.stderr)
-
-    else:  # run without display
-        agents_without_human = ALL_AGENTS
-        agents_without_human.remove(HUMAN)
-        if HUMAN in agents_list:
-            print(f'Can\'t run Human agent without display. Available agents: {agents_without_human} '
-                  f'(look at globals.py for explanations)',
-                  file=sys.stderr)
-            exit(1)
-
-        run_all_matches(agents_list, iterations, show_display)
+    #
+    # play_thread = threading.Thread(target=play, args=[
+    #     MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
+    #                          name=MINIMAX_CORNERS,
+    #                          with_random=False), MinimaxAlpaBetaAgent(
+    #         general_heuristic, depth=1,name=MINIMAX_GENERAL,
+    #                          with_random=False), True])
+    play_thread = threading.Thread(target=play, args=[HumanAgent(),
+        MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
+                             name=MINIMAX_CORNERS,
+                             with_random=False), True])
+    window_thread = threading.Thread(target=gui.buildBoard)
+    play_thread.start()
+    window_thread.start()

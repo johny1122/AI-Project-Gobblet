@@ -72,33 +72,33 @@ class MinimaxAlpaBetaAgent(Agent):
             # print(f'count2: {count}')
             return min_score
 
-    def minimax_recursion(self, curr_depth, agent_turn, curr_state: State):
-        if curr_depth == 0:  # reached a leaf
-            return self.evaluation_function(curr_state)
-
-        children_scores = []
-        actions_list = []
-        for legal_action in curr_state.get_legal_actions():
-            child_state = curr_state.generate_successor(legal_action)
-            if agent_turn == MAX:
-                children_scores.append(self.minimax_recursion(curr_depth, MIN, child_state))
-            else:  # MIN
-                children_scores.append(self.minimax_recursion(curr_depth - 1, MAX, child_state))
-            actions_list.append(legal_action)
-        # print(children_scores)
-
-        if agent_turn == MAX:
-            if curr_depth == self.depth:  # root  ->  return action and not score
-                max_score = max(children_scores)
-                max_score_index = children_scores.index(max_score)
-                return actions_list[max_score_index]  # return the best action to do now
-
-            return max(children_scores, default=0)  # not root
-            # ->  return
-            # max score
-
-        else:  # MIN
-            return min(children_scores, default=0)
+    # def minimax_recursion(self, curr_depth, agent_turn, curr_state: State):
+    #     if curr_depth == 0:  # reached a leaf
+    #         return self.evaluation_function(curr_state)
+    #
+    #     children_scores = []
+    #     actions_list = []
+    #     for legal_action in curr_state.get_legal_actions():
+    #         child_state = curr_state.generate_successor(legal_action)
+    #         if agent_turn == MAX:
+    #             children_scores.append(self.minimax_recursion(curr_depth, MIN, child_state))
+    #         else:  # MIN
+    #             children_scores.append(self.minimax_recursion(curr_depth - 1, MAX, child_state))
+    #         actions_list.append(legal_action)
+    #     # print(children_scores)
+    #
+    #     if agent_turn == MAX:
+    #         if curr_depth == self.depth:  # root  ->  return action and not score
+    #             max_score = max(children_scores)
+    #             max_score_index = children_scores.index(max_score)
+    #             return actions_list[max_score_index]  # return the best action to do now
+    #
+    #         return max(children_scores, default=0)  # not root
+    #         # ->  return
+    #         # max score
+    #
+    #     else:  # MIN
+    #         return min(children_scores, default=0)
 
     def get_action(self, state) -> Action:
         if self.with_random:
