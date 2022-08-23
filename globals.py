@@ -48,3 +48,19 @@ ALL_AGENTS = [HUMAN, RANDOM, REFLEX, MINIMAX_GENERAL, MINIMAX_DEV_GENERAL,
               MINIMAX_CORNERS, MINIMAX_DEV_CORNERS, MINIMAX_AGGRESSIVE, MINIMAX_DEV_AGGRESSIVE]
 ALL_AGENTS_WITHOUT_HUMAN = [RANDOM, REFLEX, MINIMAX_GENERAL, MINIMAX_DEV_GENERAL,
                             MINIMAX_CORNERS, MINIMAX_DEV_CORNERS, MINIMAX_AGGRESSIVE, MINIMAX_DEV_AGGRESSIVE]
+
+USAGE_HELP = 'Usage:\n' \
+             'Running with human agent only works with adding --display and cannot run with more the one additional agent\n\n' \
+             '--display\tAdd this argument to show GUI (only works with 2 agents)\n' \
+             '--iterations\tNumber of rounds between each two agents (default is 1)\n' \
+             '--agents <agent1> <agent2> ...\tList of agents to run each one against the others:\n' \
+             '\tALL\t\t\tinsert all agents except Human\n' \
+             '\tH\t\t\tHuman(human controlled agent)\n' \
+             '\tR\t\t\tRandom (performs random actions)\n' \
+             '\tRX\t\t\tReflex (chooses always the first legal action)\n' \
+             '\tMM_G\t\tMinimax (with alpha-beta pruning) agent with General heuristic\n' \
+             '\tMM_C\t\tMinimax (with alpha-beta pruning) agent with Corners heuristic\n' \
+             '\tMM_A\t\tMinimax (with alpha-beta pruning) agent with Aggressive heuristic\n' \
+             '\tMMD_G\t\tMinimax (with alpha-beta pruning and deviation random jumps) agent with General heuristic\n' \
+             '\tMMD_C\t\tMinimax (with alpha-beta pruning and deviation random jumps) agent with Corners heuristic\n' \
+             '\tMMD_A\t\tMinimax (with alpha-beta pruning and deviation random jumps) agent with Aggressive heuristic\n'

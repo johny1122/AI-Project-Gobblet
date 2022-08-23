@@ -162,7 +162,7 @@ def print_results(agent1: str, agent2: str, results, iterations: int) -> None:
     print('------- Results -------')
     for color, agent in zip(COLORS, [agent1, agent2]):
         print(
-            f'{agent} wins:\t{results[color][WINS]}\t{(results[color][WINS] * HUNDRED_FLOAT) / iterations}%\t'
+            f'{agent} wins: {results[color][WINS]}\t{(results[color][WINS] * HUNDRED_FLOAT) / iterations}%\t'
             f' avg_action_time:\t'
             f'{round(((results[color][AVG_ACTION_TIME] * SECONDS_TO_MILLISECONDS) / iterations), 3)} ms\t'
             f'avg_actions:\t{results[TOTAL_ACTIONS] / iterations}')
@@ -177,9 +177,14 @@ def change_turn(player_turn: str) -> str:
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:  # no args entered
+        print(USAGE_HELP)
+        sys.exit(1)
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
-    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
+    parser.add_argument('--display', help='Add this argument to show GUI (only works with 2 agents)',
+                        nargs='?', const=True)
+    parser.add_argument('--iterations', help='Number of rounds between each two agents', type=int, default=1)
     parser.add_argument('--agents',
                         help=f'List of agents to run each one against the others: {ALL_AGENTS}',
                         nargs='+',
@@ -195,6 +200,11 @@ if __name__ == '__main__':
             f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
             f'(look at globals.py for explanations)',
             file=sys.stderr)
+        exit(1)
+
+    if len(agents_list) > 1 and ALL in agents_list:
+        print(
+            f'ALL must be entered alone', file=sys.stderr)
         exit(1)
 
     if show_display:
@@ -220,5 +230,3 @@ if __name__ == '__main__':
             exit(1)
 
         run_all_matches(agents_list, iterations, show_display)
-
-
