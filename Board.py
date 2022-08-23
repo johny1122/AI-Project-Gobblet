@@ -79,7 +79,6 @@ class Board:
         for line in self.lines:
 
             blues, reds = self.count_colors_in_line(line)
-            # print("blues ",blues,"   reds ",reds)
             if blues == ROW_COL_LENGTH:
                 return True, BLUE, line
             elif reds == ROW_COL_LENGTH:
@@ -87,7 +86,6 @@ class Board:
 
         return False
 
-    # TODO: maybe add to Cell for not calculating each time
     def lines_of_cell(self, cell: Cell) -> List[List[Location]]:
         lines = [line for line in self.lines if cell.location in line]
         return lines
