@@ -1,12 +1,8 @@
 import sys
 from state import State
-from cell import Cell
 from globals import *
 from typing import List
 from location import Location
-
-
-
 
 
 def corners_heuristic(state: State) -> int:
@@ -19,10 +15,8 @@ def corners_heuristic(state: State) -> int:
                         [Location(2, 0), Location(2, 1), Location(2, 2)],
                         [Location(0, 2), Location(1, 2), Location(2, 2)]]
 
-
     second_importance = [[Location(0, 1), Location(1, 1), Location(2, 1)],
                          [Location(1, 0), Location(1, 1), Location(1, 2)]]
-
 
     result = state.board.is_finished()
     if result:  # a player won or draw
@@ -42,16 +36,10 @@ def corners_heuristic(state: State) -> int:
         for line in second_importance:
             score += get_score_for_line(player_color, line, state, 5)
 
-
     return score
 
-#TODO: combine second and first importance score functions and give a
-# different coefficient to multiply
 
-
-def get_score_for_line(player_color: str, line: List[Cell], state:
-State, coefficient: int) -> \
-        int:
+def get_score_for_line(player_color: str, line: List[Location], state: State, coefficient: int) -> int:
     score = 0
     for location in line:
         cell = state.board.get_cell(location)
@@ -60,23 +48,23 @@ State, coefficient: int) -> \
         elif cell.top().color == player_color:
             score += cell.top().size * coefficient
             if is_middle(location):
-                score = score+500
-            if is_corner(location= cell.location):
-                # score = score*2
-                score = score + 250
+                score += 500
+            elif is_corner(location=cell.location):
+                score += 200
 
         elif cell.top().color != player_color:
             score -= cell.top().size * coefficient
             if is_middle(location):
-                score = score - 500
-            if is_corner(location= cell.location):
-                score = score -250
+                score -= 500
+            elif is_corner(location=cell.location):
+                score -= 200
                 # if score < 0:
                 #     score = score*2
                 # else:
                 #     score = score/2
 
     return score
+
 
 # def get_score_for_first_importance(player_color: str, line: List[Cell], state:
 # State) -> \

@@ -17,11 +17,11 @@ def general_heuristic(state: State) -> int:
             score += 0
         # has winner
         elif result[1] == player_color:
-            score += sys.maxsize
+            return sys.maxsize
             # print (player_color)
             # print(score)
         elif result[1] != player_color:
-            score -= sys.maxsize
+            return -sys.maxsize
 
     else:  # game not finished
         for line in state.board.lines:

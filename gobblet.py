@@ -3,7 +3,6 @@ import gui
 import argparse
 import time
 import threading
-from itertools import combinations
 from Board import Board
 from globals import *
 from state import State
@@ -18,6 +17,7 @@ from Agents.minimax_alpha_beta_agent import MinimaxAlpaBetaAgent
 # Heuristics
 from Heuristics.general_heuristic import general_heuristic
 from Heuristics.corners_heuristic import corners_heuristic
+from Heuristics.aggressive_heuristic import aggressive_heuristic
 
 
 class Analyzer:
@@ -42,44 +42,63 @@ class Analyzer:
         return self.data[BLUE][TOTAL_ACTIONS] + self.data[RED][TOTAL_ACTIONS]
 
 
+def get_agent(agent_name: str):
+    if agent_name == RANDOM:
+        return RandomAgent()
+    elif agent_name == REFLEX:
+        return ReflexAgent()
+    elif agent_name == HUMAN:
+        return HumanAgent()
+    elif agent_name == MINIMAX_GENERAL:
+        return MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_GENERAL,
+                                    with_random=False)
+    elif agent_name == MINIMAX_DEV_GENERAL:
+        return MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_DEV_GENERAL,
+                                    with_random=True)
+    elif agent_name == MINIMAX_CORNERS:
+        return MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_CORNERS,
+                                    with_random=False)
+    elif agent_name == MINIMAX_DEV_CORNERS:
+        return MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_DEV_CORNERS,
+                                    with_random=True)
+    elif agent_name == MINIMAX_AGGRESSIVE:
+        return MinimaxAlpaBetaAgent(heuristic=aggressive_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_AGGRESSIVE,
+                                    with_random=False)
+    elif agent_name == MINIMAX_DEV_AGGRESSIVE:
+        return MinimaxAlpaBetaAgent(heuristic=aggressive_heuristic, depth=SEARCH_DEPTH,
+                                    name=MINIMAX_DEV_AGGRESSIVE,
+                                    with_random=True)
+    # TODO: add more agents
+
+
 def run_all_matches(agents_list, iterations: int, show_display: bool):
-    agents = []
-    for agent in agents_list:
-        if agent == RANDOM:
-            agents.append(RandomAgent())
-        elif agent == REFLEX:
-            agents.append(ReflexAgent())
-        elif agent == MINIMAX_GENERAL:
-            agents.append(
-                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1,
-                                     name=MINIMAX_GENERAL,
-                                     with_random=False))
-        elif agent == MINIMAX_DEV_GENERAL:
-            agents.append(
-                MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_DEV_GENERAL,
-                                     with_random=True))
-        elif agent == MINIMAX_CORNERS:
-            agents.append(
-                MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
-                                     name=MINIMAX_CORNERS,
-                                     with_random=False))
+    if agents_list == [ALL]:
+        agents_list = ALL_AGENTS_WITHOUT_HUMAN
 
-        # TODO: add more agents
-
-    agents_matches = combinations(agents, 2)
-    for agent1, agent2 in agents_matches:
-        print(f'{Style.HEADER}===== {agent1.get_name()} vs {agent2.get_name()} ====={Style.ENDC}')
-        run_match(agent1, agent2, iterations, show_display)
+    for agent1_name in agents_list:
+        for agent2_name in agents_list:
+            if agent1_name != agent2_name:
+                print(f'{Style.HEADER}===== {agent1_name} vs {agent2_name} ====={Style.ENDC}')
+                run_match(agent1_name, agent2_name, iterations, show_display)
 
 
-def run_match(agent1, agent2, iterations: int, show_display: bool):
+def run_match(agent1_name, agent2_name, iterations: int, show_display: bool):
     results = {color: {WINS: 0, AVG_ACTION_TIME: 0} for color in COLORS}
     results[DRAW] = 0
+    results[TOTAL_ACTIONS] = 0
     for match in range(iterations):
+        agent1 = get_agent(agent1_name)
+        agent2 = get_agent(agent2_name)
         analyzer, winner = play(agent1, agent2, show_display)
         analyzer.calculate_avg_time()
         results[BLUE][AVG_ACTION_TIME] += analyzer.data[BLUE][AVG_ACTION_TIME]
         results[RED][AVG_ACTION_TIME] += analyzer.data[RED][AVG_ACTION_TIME]
+        results[TOTAL_ACTIONS] += analyzer.get_total_actions()
 
         if winner is not None:
             if winner == agent1.get_name():
@@ -98,8 +117,12 @@ def play(agent1, agent2, show_display: bool = False):
     opponent = agent2
     analyzer = Analyzer()
     state = State(player_turn, board_game)
+    turns = 0
 
     while not state.is_terminal():
+        if turns == MAX_TURNS_ALLOWED:
+            break
+        turns += 1
         new_action = analyzer.measure_action_time(player_turn, curr_player, state)
 
         if show_display:
@@ -111,7 +134,10 @@ def play(agent1, agent2, show_display: bool = False):
         player_turn = change_turn(player_turn)
         curr_player, opponent = opponent, curr_player
 
-    game_result = state.board.is_finished()
+    if turns == MAX_TURNS_ALLOWED:
+        game_result = DRAW
+    else:
+        game_result = state.board.is_finished()
     winner = None
     if type(game_result) == tuple:  # found winner
         winner = game_result[1]  # winner color
@@ -121,15 +147,15 @@ def play(agent1, agent2, show_display: bool = False):
             winner = agent2.get_name()
         if show_display:
             gui.markWinner(game_result[2][0], game_result[2][1], game_result[2][2])
-        else:
-            if game_result[1] == BLUE:
-                print(
-                    f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
-                    f'({Style.OKBLUE}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
-            elif game_result[1] == RED:
-                print(
-                    f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
-                    f'({Style.FAIL}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
+        # else:
+        #     if game_result[1] == BLUE:
+        #         print(
+        #             f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
+        #             f'({Style.OKBLUE}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
+        #     elif game_result[1] == RED:
+        #         print(
+        #             f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
+        #             f'({Style.FAIL}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
 
     elif game_result == DRAW:  # Draw
         if show_display:
@@ -143,12 +169,12 @@ def play(agent1, agent2, show_display: bool = False):
 
 def print_results(agent1: str, agent2: str, results, iterations: int) -> None:
     print('------- Results -------')
-    # print(f'Agent {agent1} vs {agent2}: ')
     for color, agent in zip(COLORS, [agent1, agent2]):
         print(
             f'{agent} wins:\t{results[color][WINS]}\t{(results[color][WINS] * HUNDRED_FLOAT) / iterations}%\t'
-            f' avg_action:\t'
-            f'{round(((results[color][AVG_ACTION_TIME] * SECONDS_TO_MILLISECONDS) / iterations), 3)} ms')
+            f' avg_action_time:\t'
+            f'{round(((results[color][AVG_ACTION_TIME] * SECONDS_TO_MILLISECONDS) / iterations), 3)} ms\t'
+            f'avg_actions:\t{results[TOTAL_ACTIONS] / iterations}')
 
     print(f'draws:\t{(results[DRAW] * HUNDRED_FLOAT) / iterations}\n')
 
@@ -159,110 +185,75 @@ def change_turn(player_turn: str) -> str:
     return BLUE
 
 
-##########################################################
-# def manual_move(is_outside: bool, index: int, color: str = None) -> None:
-#     global src_piece, dest_piece, clicks_count, board_game
-#
-#     piece = None
-#     row, col = None, None
-#     if is_outside:
-#         stack_index = index
-#         if color == BLUE:  # blue
-#             piece = board_game.stacks[BLUE][stack_index].top()
-#         elif color == RED:  # red
-#             piece = board_game.stacks[RED][stack_index].top()
-#
-#     else:  # inside
-#         cell_index = index
-#         row, col = int(cell_index / 3), (cell_index % 3)
-#         piece_location = Location(row, col)
-#         piece = board_game.get_cell(piece_location).top()
-#
-#     if clicks_count == 1:
-#         src_piece = piece
-#         clicks_count += 1
-#
-#     elif clicks_count == 2:
-#         if src_piece is not None and (row is not None and col is not None):
-#             dest_piece = piece
-#             new_action = Action(src_piece, src_piece.location, Location(row, col))
-#
-#             if board_game.is_action_legal(new_action):
-#                 gui.apply_action(new_action, board_game)
-#                 board_game.apply_action(new_action)
-#                 turn_result = board_game.is_finished()
-#                 if type(turn_result) == tuple:  # found winner
-#                     gui.markWinner(turn_result[2][0], turn_result[2][1], turn_result[2][2])
-#                     # TODO: stop game
-#                 elif turn_result == DRAW:  # Draw
-#                     # TODO - display a tie
-#                     # TODO: stop game
-#                     pass
-#
-#         clicks_count = 1
-#         src_piece = None
-#         dest_piece = None
-##########################################################
-
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
-    # parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
-    # parser.add_argument('--agents',
-    #                     help=f'List of agents to run each one against the others: {ALL_AGENTS}',
-    #                     nargs='+',
-    #                     default=[], type=str)
-    # args = parser.parse_args()
-    #
-    # agents_list = args.agents
-    # show_display = args.display
-    # iterations = args.iterations
-    #
-    # if len(agents_list) == 1:
-    #     print(
-    #         f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
-    #         f'(look at globals.py for explanations)',
-    #         file=sys.stderr)
-    #     exit(1)
-    #
-    # # show_display = True  # TODO - delete
-    # if show_display:
-    #     if len(agents_list) == 2:
-    #         # play_thread = threading.Thread(target=play, args=[
-    #         #     MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=1, name=MINIMAX_GENERAL,
-    #         #                          with_random=False), RandomAgent(), True])
-    #         play_thread = threading.Thread(target=play, args=[
-    #             MinimaxAlpaBetaAgent(offensive_heuristic, depth=1,
-    #                                  with_random=False), HumanAgent(), True])
-    #         window_thread = threading.Thread(target=gui.buildBoard)
-    #         play_thread.start()
-    #         window_thread.start()
-    #     else:
-    #         print(f'Should display game only of a game of 2 agents. got {len(agents_list)}', file=sys.stderr)
-    #
-    # else:  # run without display
-    #     agents_without_human = ALL_AGENTS
-    #     agents_without_human.remove(HUMAN)
-    #     if HUMAN in agents_list:
-    #         print(f'Can\'t run Human agent without display. Available agents: {agents_without_human} '
-    #               f'(look at globals.py for explanations)',
-    #               file=sys.stderr)
-    #         exit(1)
-    #
-    #     run_all_matches(agents_list, iterations, show_display)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--display', help='Add this argument to show GUI', nargs='?', const=True)
+    parser.add_argument('--iterations', help='Number of rounds between two agents', type=int, default=1)
+    parser.add_argument('--agents',
+                        help=f'List of agents to run each one against the others: {ALL_AGENTS}',
+                        nargs='+',
+                        default=[], type=str)
+    args = parser.parse_args()
 
+    agents_list = args.agents
+    show_display = args.display
+    iterations = args.iterations
 
-    #
-    # play_thread = threading.Thread(target=play, args=[
-    #     MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
-    #                          name=MINIMAX_CORNERS,
-    #                          with_random=False), MinimaxAlpaBetaAgent(
-    #         general_heuristic, depth=1,name=MINIMAX_GENERAL,
-    #                          with_random=False), True])
-    play_thread = threading.Thread(target=play, args=[HumanAgent(),
-        MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=1,
-                             name=MINIMAX_CORNERS,
-                             with_random=False), True])
-    window_thread = threading.Thread(target=gui.buildBoard)
-    play_thread.start()
-    window_thread.start()
+    if (len(agents_list) == 1) and (agents_list[0] != ALL):
+        print(
+            f'Got only one agent. Need at least 2 different. Available agents: {ALL_AGENTS} '
+            f'(look at globals.py for explanations)',
+            file=sys.stderr)
+        exit(1)
+
+    if show_display:
+        if len(agents_list) == 2:
+            if iterations != 1:
+                print(f'Only one game is played when display is selected', file=sys.stderr)
+            agent1 = get_agent(agents_list[0])
+            agent2 = get_agent(agents_list[1])
+            play_thread = threading.Thread(target=play, args=[agent1, agent2, True])
+            window_thread = threading.Thread(target=gui.buildBoard)
+            play_thread.start()
+            window_thread.start()
+
+        else:
+            print(f'Display game is only available in a game of 2 agents. got {len(agents_list)}',
+                  file=sys.stderr)
+
+    else:  # run without display
+        if HUMAN in agents_list:
+            print(f'Can\'t run Human agent without display. Available agents: {ALL_AGENTS_WITHOUT_HUMAN} '
+                  f'(look at globals.py for explanations)',
+                  file=sys.stderr)
+            exit(1)
+
+        run_all_matches(agents_list, iterations, show_display)
+
+    ############################################################################
+    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=SEARCH_DEPTH,
+    #                                                  name=MINIMAX_CORNERS,
+    #                                                  with_random=False),
+    #     MinimaxAlpaBetaAgent(
+    #         general_heuristic, depth=SEARCH_DEPTH, name=MINIMAX_GENERAL,
+    #         with_random=False), True])
+    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=SEARCH_DEPTH,
+    #                                                  name=MINIMAX_GENERAL,
+    #                                                  with_random=True),
+    #     MinimaxAlpaBetaAgent(
+    #         general_heuristic, depth=SEARCH_DEPTH, name=MINIMAX_GENERAL,
+    #         with_random=False), True])
+
+    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=general_heuristic,
+    #                                                                        depth=SEARCH_DEPTH,
+    #                                                                        name=MINIMAX_GENERAL,
+    #                                                                        with_random=False), HumanAgent(),
+    #                                                   True])
+
+    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=aggressive_heuristic,
+    #                                                                        depth=SEARCH_DEPTH,
+    #                                                                        name=MINIMAX_AGGRESSIVE,
+    #                                                                        with_random=False), HumanAgent(), True])
+    # window_thread = threading.Thread(target=gui.buildBoard)
+    # play_thread.start()
+    # window_thread.start()

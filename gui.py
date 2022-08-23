@@ -1,5 +1,6 @@
 from functools import partial
 from tkinter import font
+import tkinter as tk
 from typing import Tuple
 from PIL import ImageTk, Image
 from action import Action
@@ -92,6 +93,7 @@ def buildBoard(prevWindow=None, button1=None, button2=None, question=None):
         window = tk.Tk()
 
     window.title('Gobblet')
+    window.resizable(False, False)
     window.geometry("400x550")
 
     red_large_square = ImageTk.PhotoImage(Image.open(

@@ -1,13 +1,13 @@
+import pickle
 from typing import Union, List
 from action import Action
 from Board import Board
-from copy import deepcopy
 from globals import *
 
 
 class State:
     def __init__(self, player_turn: str, board: Union[Board, None] = None):
-        self.board = Board() if board is None else deepcopy(board)
+        self.board = Board() if board is None else pickle.loads(pickle.dumps(board))
         self.player_turn = player_turn
 
     def get_legal_actions(self) -> List[Action]:

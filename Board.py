@@ -161,9 +161,6 @@ class Board:
         if type(turn_result) == tuple:
             return turn_result
 
-        elif self.is_draw():
-            return DRAW
-
         return False
 
     def apply_action(self, action: Action) -> None:
@@ -172,7 +169,7 @@ class Board:
         dest = action.dest
 
         # add piece to new location
-        piece_copy = deepcopy(piece)
+        piece_copy = Piece(piece.size, piece.color, piece.stack_index)
         self.cells[dest.row][dest.col].add(piece_copy)
         self.cells[dest.row][dest.col].top().location = dest
 
