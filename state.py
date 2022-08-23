@@ -30,15 +30,3 @@ class State:
             return True
         return False
 
-    def deep_copy(self):
-        new_state = State(self.player_turn, self.board)
-        return new_state
-
-    # def __str__(self):
-    #     return str(self._uttt) + str(self.player_turn)
-    #
-    # def __hash__(self):
-    #     return hash(str(self))
-    #
-    # def __eq__(self, other):
-    #     return str(self) == str(other)

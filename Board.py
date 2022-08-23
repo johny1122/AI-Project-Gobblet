@@ -5,7 +5,6 @@ from pieces_stack import PiecesStack
 from location import Location
 from action import Action
 from globals import *
-from copy import *
 
 
 class Board:

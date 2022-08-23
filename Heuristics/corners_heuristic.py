@@ -58,72 +58,10 @@ def get_score_for_line(player_color: str, line: List[Location], state: State, co
                 score -= 500
             elif is_corner(location=cell.location):
                 score -= 200
-                # if score < 0:
-                #     score = score*2
-                # else:
-                #     score = score/2
 
     return score
 
 
-# def get_score_for_first_importance(player_color: str, line: List[Cell], state:
-# State) -> \
-#         int:nt:
-#
-#     score = 0
-#     for location in line:
-#         cell = state.board.get_cell(location)
-#         if cell.is_empty():
-#             score += 5
-#         elif cell.top().color == player_color:
-#             score += cell.top().size * 20
-#             if is_middle(location):
-#                 score = score+500
-#             if is_corner(location= cell.location):
-#                 # score = score*2
-#                 score = score + 250
-#
-#         elif cell.top().color != player_color:
-#             score -= cell.top().size * 20
-#             if is_middle(location):
-#                 score = score - 500
-#             if is_corner(location= cell.location):
-#                 score = score -250
-#                 # if score < 0:
-#                 #     score = score*2
-#                 # else:
-#                 #     score = score/2
-#
-#     return score
-
-
-# def get_score_for_second_importance(player_color: str, line: List[Cell], state:
-# State) -> \
-#         int:
-#     score = 0
-#     for location in line:
-#         cell = state.board.get_cell(location)
-#         if cell.is_empty():
-#             score += 5
-#         elif cell.top().color == player_color:
-#             score += cell.top().size * 5
-#             if is_middle(location):
-#                 score = score + 500
-#             if is_corner(location=cell.location):
-#                 score = score +250
-#
-#         elif cell.top().color != player_color:
-#             score -= cell.top().size * 5
-#             if is_middle(location):
-#                 score = score - 500
-#             if is_corner(location=cell.location):
-#                 score = score - 250
-#                 # if score < 0:
-#                 #     score = score * 2
-#                 # else:
-#                 #     score = score / 2
-#
-#     return score
 
 def is_corner(location: Location) -> bool:
     if location.row == 0 and location.col == 0:

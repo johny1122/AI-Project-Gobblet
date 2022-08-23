@@ -73,7 +73,6 @@ def get_agent(agent_name: str):
         return MinimaxAlpaBetaAgent(heuristic=aggressive_heuristic, depth=SEARCH_DEPTH,
                                     name=MINIMAX_DEV_AGGRESSIVE,
                                     with_random=True)
-    # TODO: add more agents
 
 
 def run_all_matches(agents_list, iterations: int, show_display: bool):
@@ -147,15 +146,7 @@ def play(agent1, agent2, show_display: bool = False):
             winner = agent2.get_name()
         if show_display:
             gui.markWinner(game_result[2][0], game_result[2][1], game_result[2][2])
-        # else:
-        #     if game_result[1] == BLUE:
-        #         print(
-        #             f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
-        #             f'({Style.OKBLUE}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
-        #     elif game_result[1] == RED:
-        #         print(
-        #             f'{agent1.get_name()} vs {agent2.get_name()}: {winner} Won! '
-        #             f'({Style.FAIL}{game_result[1]}{Style.ENDC})  total actions: {analyzer.get_total_actions()}')
+
 
     elif game_result == DRAW:  # Draw
         if show_display:
@@ -230,30 +221,4 @@ if __name__ == '__main__':
 
         run_all_matches(agents_list, iterations, show_display)
 
-    ############################################################################
-    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=corners_heuristic, depth=SEARCH_DEPTH,
-    #                                                  name=MINIMAX_CORNERS,
-    #                                                  with_random=False),
-    #     MinimaxAlpaBetaAgent(
-    #         general_heuristic, depth=SEARCH_DEPTH, name=MINIMAX_GENERAL,
-    #         with_random=False), True])
-    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=general_heuristic, depth=SEARCH_DEPTH,
-    #                                                  name=MINIMAX_GENERAL,
-    #                                                  with_random=True),
-    #     MinimaxAlpaBetaAgent(
-    #         general_heuristic, depth=SEARCH_DEPTH, name=MINIMAX_GENERAL,
-    #         with_random=False), True])
 
-    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=general_heuristic,
-    #                                                                        depth=SEARCH_DEPTH,
-    #                                                                        name=MINIMAX_GENERAL,
-    #                                                                        with_random=False), HumanAgent(),
-    #                                                   True])
-
-    # play_thread = threading.Thread(target=play, args=[MinimaxAlpaBetaAgent(heuristic=aggressive_heuristic,
-    #                                                                        depth=SEARCH_DEPTH,
-    #                                                                        name=MINIMAX_AGGRESSIVE,
-    #                                                                        with_random=False), HumanAgent(), True])
-    # window_thread = threading.Thread(target=gui.buildBoard)
-    # play_thread.start()
-    # window_thread.start()

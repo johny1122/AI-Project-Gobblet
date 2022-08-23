@@ -27,7 +27,8 @@ def build_main_window():
 
     imgLabel = tk.Label(imgFrame, image=startingImg)
     imgLabel.pack()
-    # TODO: change command to a function allowing to select modes (human vs AI, AI vs AI)
+
+
     startButton = tk.Button(helloScreen, text="Start",
                             command=lambda: setGameModes(helloScreen, startButton, imgFrame),
 
@@ -65,7 +66,6 @@ def setGameModes(prevWindow, button, image):
                               font=helv32)
     selectQuestion.pack(anchor="center")
 
-    # TODO: set functions that set up players for each button
     HumanButton = tk.Button(prevWindow, text="Human vs AI",
                             command=lambda: buildBoard(prevWindow, HumanButton,
                                                        AiButton, selectQuestion),
@@ -280,22 +280,10 @@ def enable_buttons():
 
 
 def markWinner(l1: Location, l2: Location, l3: Location):
-    # cell1bg = cells[l1.row * 2 + l1.col].cget("background")
-    # cell2bg = cells[l2.row * 2 + l2.col].cget("background")
-    # cell3bg = cells[l3.row * 2 + l3.col].cget("background")
-
-    # TODO: how to make this flash?
-    # TODO: how to increase border size?
 
     cells[l1.row * 3 + l1.col].config(bg="green")
-    # cells[l1.row*2+l1.col].after(200, lambda: cells[
-    #     l1.row*2+l1.col].config(
-    #     background=cell1bg))
+
     cells[l2.row * 3 + l2.col].config(bg="green")
-    # cells[l2.row*2+l2.col].after(200, lambda: cells[
-    #     l2.row*2+l2.col].config(
-    #     background=cell2bg))
+
     cells[l3.row * 3 + l3.col].config(bg="green")
-    # cells[l3.row*2+l3.col].after(200, lambda: cells[
-    #     l3.row*2+l3.col].config(
-    #     background=cell3bg))
+

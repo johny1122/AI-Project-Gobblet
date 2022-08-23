@@ -18,8 +18,6 @@ def general_heuristic(state: State) -> int:
         # has winner
         elif result[1] == player_color:
             return sys.maxsize
-            # print (player_color)
-            # print(score)
         elif result[1] != player_color:
             return -sys.maxsize
 
