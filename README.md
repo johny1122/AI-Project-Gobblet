@@ -3,12 +3,15 @@
 Final project in the course 'Introduction to Artificial Intelligence' at The Hebrew University
 
 -- Usage --  
-    Running with human agent only works with adding --display and cannot run with more the one additional agent
+    install the requirements with (create before a virtual environment if needed):  
+    ``pip3 install -r requirements.txt``  
+    Running command: ``python3 gobblet.py <ARGS>``  
+    Running with human agent only works with adding --display and cannot run with more the one additional agent.  
+    Arguments:
 
-
-    --display\tAdd this argument to show GUI (only works with 2 agents)
-    --iterations\tNumber of rounds between each two agents (default is 1)
-    --agents\tList of agents to run each one against the others:
+    --display       Add this argument to show GUI (only works with 2 agents)
+    --iterations    Number of rounds between each two agents (default is 1)
+    --agents        List of agents to run each one against the others:
         ALL     insert all agents except Human
         H       Human(human controlled agent)
         R       Random (performs random actions)
