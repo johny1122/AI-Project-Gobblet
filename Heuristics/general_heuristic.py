@@ -10,13 +10,9 @@ def general_heuristic(state: State) -> int:
     player_color = state.player_turn
 
     result = state.board.is_finished()
-    if result:  # a player won or draw
-
-        # draw
-        if result == DRAW:
-            score += 0
+    if result:  # a player won
         # has winner
-        elif result[1] == player_color:
+        if result[1] == player_color:
             return sys.maxsize
         elif result[1] != player_color:
             return -sys.maxsize

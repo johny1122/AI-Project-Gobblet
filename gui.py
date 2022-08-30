@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 from action import Action
 from Board import Board
 from piece import *
+from time import sleep
 
 cells = [0] * 9
 stacks = {color: [0] * STACKS_NUM for color in COLORS}
@@ -13,6 +14,7 @@ stacks = {color: [0] * STACKS_NUM for color in COLORS}
 clicks_count = 1
 src_tuple = None
 dest_tuple = None
+queue = []
 
 
 def build_main_window():
@@ -129,7 +131,21 @@ def buildBoard(prevWindow=None, button1=None, button2=None, question=None):
         stacks[RED][i].image = red_large_square
         stacks[RED][i].place(x=110 + i * 90, y=470)
 
-    window.mainloop()
+    while True:
+        update_gui()
+        window.update()
+        sleep(0.005)
+
+
+def update_gui():
+    if queue:
+        action, board = queue.pop(0)
+        game_result = board.found_winner()
+        if game_result:  # winner
+            markWinner(game_result[1], game_result[2][0], game_result[2][1], game_result[2][2])
+            return
+
+        apply_action(action, board)
 
 
 def removeFromStack(color: str, stackIndex: int, newSize: int) -> None:
@@ -279,11 +295,27 @@ def enable_buttons():
             button['state'] = 'normal'
 
 
-def markWinner(l1: Location, l2: Location, l3: Location):
-
+def markWinner(winner_color: str, l1: Location, l2: Location, l3: Location):
     cells[l1.row * 3 + l1.col].config(bg="green")
 
     cells[l2.row * 3 + l2.col].config(bg="green")
 
     cells[l3.row * 3 + l3.col].config(bg="green")
 
+    end_window(winner_color)
+
+
+def end_window(winner_color: str = None):
+    window = tk.Tk()
+    helv25 = font.Font(root=window, family="Helvetica", size=25,
+                       weight="bold")
+    window.title('End')
+    if winner_color:
+        winner_label = tk.Label(window, text=f'The winner is {winner_color}',
+                                fg=f"{winner_color.lower()}", font=helv25)
+        winner_label.pack()
+    else:
+        draw_label = tk.Label(window, text=f'Game finished with DRAW',
+                              fg="black", font=helv25)
+        draw_label.pack()
+    window.mainloop()

@@ -125,7 +125,7 @@ def play(agent1, agent2, show_display: bool = False):
         new_action = analyzer.measure_action_time(player_turn, curr_player, state)
 
         if show_display:
-            gui.apply_action(new_action, state.board)
+            gui.queue.append((new_action, state.board))
 
         state = state.generate_successor(new_action)
 
@@ -145,15 +145,10 @@ def play(agent1, agent2, show_display: bool = False):
         else:
             winner = agent2.get_name()
         if show_display:
-            gui.markWinner(game_result[2][0], game_result[2][1], game_result[2][2])
-
+            gui.queue.append((None, state.board))
 
     elif game_result == DRAW:  # Draw
-        if show_display:
-            # TODO - display a tie
-            pass
-        else:
-            print(f'{agent1.get_name()} vs {agent2.get_name()}: Draw!')
+        print(f'{agent1.get_name()} vs {agent2.get_name()}: Draw!')
 
     return analyzer, winner
 

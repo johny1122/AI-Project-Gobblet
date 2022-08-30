@@ -21,11 +21,8 @@ def corners_heuristic(state: State) -> int:
     result = state.board.is_finished()
     if result:  # a player won or draw
 
-        # draw
-        if result == DRAW:
-            score += 0
         # has winner
-        elif result[1] == player_color:
+        if result[1] == player_color:
             score += sys.maxsize
         elif result[1] != player_color:
             score -= sys.maxsize
